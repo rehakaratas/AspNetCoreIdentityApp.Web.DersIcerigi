@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AspNetCoreIdentityApp.Web.DersIcerigi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230927202517_initial")]
+    [Migration("20230928203553_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -59,10 +59,6 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
