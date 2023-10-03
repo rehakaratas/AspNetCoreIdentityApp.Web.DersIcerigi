@@ -21,6 +21,7 @@ builder.Services.ConfigureApplicationCookie(opt =>
 
     cookieBuilder.Name = "AppCookie";
     opt.LoginPath = new PathString("/Home/SignIn");
+    opt.LogoutPath = new PathString("/Member/LogOut");
     opt.Cookie = cookieBuilder;
     opt.ExpireTimeSpan = TimeSpan.FromDays(60);
     opt.SlidingExpiration = true;
@@ -42,7 +43,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 
