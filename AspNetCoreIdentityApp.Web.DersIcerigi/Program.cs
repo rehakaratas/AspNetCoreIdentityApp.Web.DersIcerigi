@@ -1,5 +1,6 @@
 using AspNetCoreIdentityApp.Web.DersIcerigi.Extensions;
 using AspNetCoreIdentityApp.Web.DersIcerigi.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlCon"));
 });
+
+
 
 builder.Services.AddIdentityWithExtension();
 

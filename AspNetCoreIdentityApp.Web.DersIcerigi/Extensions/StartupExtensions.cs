@@ -1,6 +1,7 @@
 ﻿using AspNetCoreIdentityApp.Web.DersIcerigi.CustomValidations;
 using AspNetCoreIdentityApp.Web.DersIcerigi.Localizations;
 using AspNetCoreIdentityApp.Web.DersIcerigi.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace AspNetCoreIdentityApp.Web.DersIcerigi.Extensions
 {
@@ -9,6 +10,11 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Extensions
 
         public static void AddIdentityWithExtension(this IServiceCollection services)
         {
+
+            services.Configure<DataProtectionTokenProviderOptions>(opt =>
+            {
+                opt.TokenLifespan = TimeSpan.FromHours(2);
+            });
             services.AddIdentity<AppUser, AppRole>(options =>
             {
                 options.User.RequireUniqueEmail = true;
@@ -23,7 +29,11 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Extensions
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
                 options.Lockout.MaxFailedAccessAttempts = 3;
 
-            }).AddPasswordValidator<PasswordValidator>().AddUserValidator<UserValidator>().AddErrorDescriber<LocalizationIdentityErrorDescriber>().AddEntityFrameworkStores<AppDbContext>();
+            }).AddPasswordValidator<PasswordValidator>()
+              .AddUserValidator<UserValidator>()
+              .AddErrorDescriber<LocalizationIdentityErrorDescriber>()
+              .AddDefaultTokenProviders()
+              .AddEntityFrameworkStores<AppDbContext>();
         }
     }
 }
