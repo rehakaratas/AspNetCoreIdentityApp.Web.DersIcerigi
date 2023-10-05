@@ -1,5 +1,7 @@
 using AspNetCoreIdentityApp.Web.DersIcerigi.Extensions;
 using AspNetCoreIdentityApp.Web.DersIcerigi.Models;
+using AspNetCoreIdentityApp.Web.DersIcerigi.OptionModels;
+using AspNetCoreIdentityApp.Web.DersIcerigi.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,9 +15,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlCon"));
 });
 
-
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
 builder.Services.AddIdentityWithExtension();
+
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 
 builder.Services.ConfigureApplicationCookie(opt =>

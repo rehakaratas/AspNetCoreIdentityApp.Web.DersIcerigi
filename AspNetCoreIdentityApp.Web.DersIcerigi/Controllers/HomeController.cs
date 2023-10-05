@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using AspNetCoreIdentityApp.Web.DersIcerigi.Extensions;
+using AspNetCoreIdentityApp.Web.DersIcerigi.Services;
 
 namespace AspNetCoreIdentityApp.Web.DersIcerigi.Controllers
 {
@@ -13,12 +14,14 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Controllers
 
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IEmailService _emailService;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public HomeController(ILogger<HomeController> logger, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IEmailService emailService)
         {
             _logger = logger;
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailService = emailService;
         }
 
         public IActionResult Index()
@@ -131,7 +134,11 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Controllers
 
             string passwordResetToken =await _userManager.GeneratePasswordResetTokenAsync(hasUser);
             
-            var passwordResetLink= Url.Action("ResetPassword","Home", new {userId=hasUser.Id,Token=passwordResetToken});
+            var passwordResetLink= Url.Action("ResetPassword","Home", new {userId=hasUser.Id,Token=passwordResetToken},HttpContext.Request.Scheme);
+
+
+            await _emailService.SendResetPasswordEmail(passwordResetLink,hasUser.Email);
+
 
             TempData["SuccessMessage"] = "Şifre yenileme linki eposta adresinize gönderiliştir.";
 
