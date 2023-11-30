@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace AspNetCoreIdentityApp.Web.DersIcerigi.Extensions
 {
@@ -15,6 +16,18 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Extensions
             });
 
             
+        }
+
+
+        public static void AddModelErrorList(this ModelStateDictionary modelState, IEnumerable<IdentityError> errors)
+        {
+
+            errors.ToList().ForEach(x =>
+            {
+                modelState.AddModelError(string.Empty, x.Description);
+            });
+
+
         }
 
 
