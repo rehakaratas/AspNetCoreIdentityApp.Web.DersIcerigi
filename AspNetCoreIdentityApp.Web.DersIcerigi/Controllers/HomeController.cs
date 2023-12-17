@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using AspNetCoreIdentityApp.Web.DersIcerigi.Extensions;
 using AspNetCoreIdentityApp.Web.DersIcerigi.Services;
+using System.Security.Claims;
 
 namespace AspNetCoreIdentityApp.Web.DersIcerigi.Controllers
 {
@@ -34,15 +35,11 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Controllers
             return View();
         }
 
-
         public IActionResult SignUp()
         {
 
-
-
             return View();
         }
-
 
         public IActionResult SignIn()
         {
@@ -50,7 +47,7 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SignIn(SignInViewModel model, string? returnUrl=null)
+        public async Task<IActionResult> SignIn(SignInViewModel model, string? returnUrl = null)
         {
 
             if (!ModelState.IsValid)
@@ -58,7 +55,7 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Controllers
                 return View();
             }
 
-            returnUrl = returnUrl ?? Url.Action("Index","Home");
+            returnUrl = returnUrl ?? Url.Action("Index", "Home");
 
             var hasUser = await _userManager.FindByEmailAsync(model.Email);
             if (hasUser == null)
@@ -67,9 +64,9 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Controllers
                 return View();
             }
 
-            var signInResult = await _signInManager.PasswordSignInAsync(hasUser, model.Password,model.RememberMe,true);
+            var signInResult = await _signInManager.PasswordSignInAsync(hasUser, model.Password, model.RememberMe, true);
 
-            if(signInResult.Succeeded)
+            if (signInResult.Succeeded)
             {
                 return Redirect(returnUrl);
             }
@@ -80,18 +77,11 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Controllers
                 return View();
             }
 
-            ModelState.AddModelErrorList(new List<string>() { $"Email veya Şifre yanlış",$"Başarısız giriş sayısı ={await _userManager.GetAccessFailedCountAsync(hasUser)}" });
-
+            ModelState.AddModelErrorList(new List<string>() { $"Email veya Şifre yanlış", $"Başarısız giriş sayısı ={await _userManager.GetAccessFailedCountAsync(hasUser)}" });
 
             return View();
 
         }
-
-
-
-
-
-
 
         [HttpPost]
         public async Task<IActionResult> SignUp(SignUpViewModel request)
@@ -102,24 +92,38 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Controllers
                 return View();
             }
 
-            var identityResult=await _userManager.CreateAsync(new() { UserName=request.UserName,PhoneNumber=request.Phone,Email=request.Email},request.Password);
+            var identityResult = await _userManager.CreateAsync(new() { UserName = request.UserName, PhoneNumber = request.Phone, Email = request.Email }, request.Password);
 
 
-            
-
-            if (identityResult.Succeeded)
+            if (!identityResult.Succeeded)
             {
-                TempData["SuccessMessage"] = "Üyelik Kayıt İşlemi Başarıyla Gerçekleşmiştir";
+                ModelState.AddModelErrorList(identityResult.Errors.Select(x => x.Description).ToList());
 
-                return RedirectToAction(nameof(HomeController.SignUp));
+                return View();
             }
 
 
-            ModelState.AddModelErrorList(identityResult.Errors.Select(x=>x.Description).ToList());
-            
+            var exchangeExpireClaim = new Claim("ExchangeExpireDate", DateTime.Now.AddDays(10).ToString());
+
+            var user = await _userManager.FindByNameAsync(request.UserName);
+
+            var claimResult=await _userManager.AddClaimAsync(user!, exchangeExpireClaim);
+
+            if (!claimResult.Succeeded)
+            {
+                ModelState.AddModelErrorList(claimResult.Errors.Select(x => x.Description).ToList());
+
+                return View();
+
+            }
 
 
-            return View();
+            TempData["SuccessMessage"] = "Üyelik Kayıt İşlemi Başarıyla Gerçekleşmiştir";
+
+            return RedirectToAction(nameof(HomeController.SignUp));
+
+
+
         }
 
         public IActionResult ForgetPassword()
@@ -138,12 +142,12 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Controllers
                 return View();
             }
 
-            string passwordResetToken =await _userManager.GeneratePasswordResetTokenAsync(hasUser);
-            
-            var passwordResetLink= Url.Action("ResetPassword","Home", new {userId=hasUser.Id,Token=passwordResetToken},HttpContext.Request.Scheme);
+            string passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(hasUser);
+
+            var passwordResetLink = Url.Action("ResetPassword", "Home", new { userId = hasUser.Id, Token = passwordResetToken }, HttpContext.Request.Scheme);
 
 
-            await _emailService.SendResetPasswordEmail(passwordResetLink!,hasUser.Email!);
+            await _emailService.SendResetPasswordEmail(passwordResetLink!, hasUser.Email!);
 
 
             TempData["SuccessMessage"] = "Şifre yenileme linki eposta adresinize gönderiliştir.";
@@ -152,13 +156,10 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Controllers
 
         }
 
-
-        public IActionResult ResetPassword(string userId,string token)
+        public IActionResult ResetPassword(string userId, string token)
         {
             TempData["userId"] = userId;
             TempData["token"] = token;
-
-           
 
             return View();
         }
@@ -169,7 +170,7 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Controllers
             var userId = TempData["userId"];
             var token = TempData["token"];
 
-            if (userId==null ||token==null)
+            if (userId == null || token == null)
             {
                 throw new Exception("Bir hata meydana geldi.");
             }
@@ -182,7 +183,7 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Controllers
                 return View();
             }
 
-            var result= await _userManager.ResetPasswordAsync(hasUser,token.ToString()!,request.Password);
+            var result = await _userManager.ResetPasswordAsync(hasUser, token.ToString()!, request.Password);
 
             if (result.Succeeded)
             {
@@ -192,7 +193,7 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Controllers
             else
             {
                 ModelState.AddModelErrorList(result.Errors.Select(x => x.Description).ToList());
-               
+
             }
 
             return View();

@@ -1,12 +1,13 @@
 ﻿using AspNetCoreIdentityApp.Web.DersIcerigi.Areas.Admin.Models;
 using AspNetCoreIdentityApp.Web.DersIcerigi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace AspNetCoreIdentityApp.Web.DersIcerigi.Areas.Admin.Controllers
 {
-
+    [Authorize(Roles ="admin")]
     [Area("Admin")]
     public class HomeController : Controller
     {

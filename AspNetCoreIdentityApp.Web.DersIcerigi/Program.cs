@@ -1,7 +1,11 @@
+using AspNetCoreIdentityApp.Web.DersIcerigi.ClaimProvider;
 using AspNetCoreIdentityApp.Web.DersIcerigi.Extensions;
 using AspNetCoreIdentityApp.Web.DersIcerigi.Models;
 using AspNetCoreIdentityApp.Web.DersIcerigi.OptionModels;
+using AspNetCoreIdentityApp.Web.DersIcerigi.Requirements;
 using AspNetCoreIdentityApp.Web.DersIcerigi.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -30,6 +34,24 @@ builder.Services.AddIdentityWithExtension();
 
 builder.Services.AddScoped<IEmailService, EmailService>();
 
+builder.Services.AddScoped<IClaimsTransformation,UserClaimProvider>();
+
+builder.Services.AddScoped<IAuthorizationHandler, ExchangeExpireRequirementHandler>();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AnkaraPolicy", policy =>
+    {
+        policy.RequireClaim("city", "ankara");
+    });
+
+
+    options.AddPolicy("ExchangePolicy", policy =>
+    {
+        policy.AddRequirements(new ExchangeExpireRequirement());
+    });
+});
+
 
 builder.Services.ConfigureApplicationCookie(opt =>
 {
@@ -38,6 +60,7 @@ builder.Services.ConfigureApplicationCookie(opt =>
     cookieBuilder.Name = "AppCookie";
     opt.LoginPath = new PathString("/Home/SignIn");
     opt.LogoutPath = new PathString("/Member/LogOut");
+    opt.AccessDeniedPath = new PathString("/Member/AccessDenied");
     opt.Cookie = cookieBuilder;
     opt.ExpireTimeSpan = TimeSpan.FromDays(60);
     opt.SlidingExpiration = true;
