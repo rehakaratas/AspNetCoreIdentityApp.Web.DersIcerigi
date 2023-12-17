@@ -64,12 +64,11 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Controllers
                 return View();
             }
 
+
+            
+
             var signInResult = await _signInManager.PasswordSignInAsync(hasUser, model.Password, model.RememberMe, true);
 
-            if (signInResult.Succeeded)
-            {
-                return Redirect(returnUrl);
-            }
 
             if (signInResult.IsLockedOut)
             {
@@ -77,9 +76,26 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Controllers
                 return View();
             }
 
-            ModelState.AddModelErrorList(new List<string>() { $"Email veya Şifre yanlış", $"Başarısız giriş sayısı ={await _userManager.GetAccessFailedCountAsync(hasUser)}" });
+            if (!signInResult.Succeeded)
+            {
+                ModelState.AddModelErrorList(new List<string>() { $"Email veya Şifre yanlış", $"Başarısız giriş sayısı ={await _userManager.GetAccessFailedCountAsync(hasUser)}" });
 
-            return View();
+                return View();
+            }
+
+
+            
+
+                if(hasUser.BirthDate.HasValue)
+                {
+                    await _signInManager.SignInWithClaimsAsync(hasUser, model.RememberMe, new[] { new Claim("birthdate", hasUser.BirthDate.Value.ToString()) });
+                }
+
+                
+                return Redirect(returnUrl);
+            
+
+            
 
         }
 
