@@ -27,6 +27,8 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Controllers
         public async Task<IActionResult> Index()
         {
 
+            var userClaims=User.Claims.ToList();
+
             var currentUser =(await _userManager.FindByNameAsync(User.Identity!.Name!))!;
             var userViewMoodel = new UserViewModel
             {
@@ -184,6 +186,50 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Controllers
             return View(userEditViewModel);
 
 
+        }
+
+        [HttpGet]
+        public IActionResult Claims()
+        {
+
+            var userClaimList = User.Claims.Select(x => new ClaimViewModel()
+            {
+                Issuer = x.Issuer,
+                Type = x.Type,
+                Value = x.Value
+            }).ToList();
+
+            return View(userClaimList);
+        }
+
+        [Authorize(Policy ="AnkaraPolicy")]
+        [HttpGet]
+        public IActionResult AnkaraPage()
+        {
+            return View();
+        }
+
+
+        [Authorize(Policy = "ExchangePolicy")]
+        [HttpGet]
+        public IActionResult ExchangePage()
+        {
+            return View();
+        }
+
+
+
+        public async Task<IActionResult> AccessDenied(string returnUrl)
+        {
+
+            string message=string.Empty;
+
+
+            message = "Bu sayfayı görmeye yetkiniz yoktur. Yetki almak için yöneticinizle görüşebilirsiniz.";
+
+            ViewBag.message=message;
+
+            return View();
         }
     }
 }
