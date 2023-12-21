@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AspNetCoreIdentityApp.Web.DersIcerigi.Areas.Admin.Controllers
 {
-    [Authorize(Roles = "admin")]
+    //[Authorize(Roles = "admin")]
     [Area("Admin")]
 
     public class RolesController : Controller
@@ -22,7 +22,7 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Areas.Admin.Controllers
             _roleManager = roleManager;
             _userManager = userManager;
         }
-        [Authorize(Roles = "role-action")]
+        //[Authorize(Roles = "role-action")]
         public async Task<IActionResult> Index()
         {
 
@@ -37,13 +37,13 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Areas.Admin.Controllers
             return View(roles);
         }
 
-        [Authorize(Roles ="role-action")]
+        //[Authorize(Roles = "role-action")]
         public IActionResult RoleCreate()
         {
             return View();
         }
 
-        [Authorize(Roles = "role-action")]
+        //[Authorize(Roles = "role-action")]
         [HttpPost]
         public async Task<IActionResult> RoleCreate(RoleCreateViewModel request)
         {
@@ -63,7 +63,7 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Areas.Admin.Controllers
 
         }
 
-        [Authorize(Roles = "role-action")]
+        //[Authorize(Roles = "role-action")]
         public async Task<IActionResult> RoleUpdate(string id)
         {
 
@@ -79,7 +79,7 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Areas.Admin.Controllers
             return View(new RoleUpdateViewModel() { Id = roleToUpdate.Id, Name = roleToUpdate.Name });
         }
 
-        [Authorize(Roles = "role-action")]
+        //[Authorize(Roles = "role-action")]
         [HttpPost]
         public async Task<IActionResult> RoleUpdate(RoleUpdateViewModel request)
         {
@@ -102,7 +102,7 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Areas.Admin.Controllers
         }
 
 
-        [Authorize(Roles = "role-action")]
+        //[Authorize(Roles = "role-action")]
         public async Task<IActionResult> RoleDelete(string id)
         {
             var roleToDelete = await _roleManager.FindByIdAsync(id);
@@ -136,7 +136,7 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Areas.Admin.Controllers
             var userRoles = await _userManager.GetRolesAsync(currentUser);
             var roleViewModelList = new List<AssignRoleToUserViewModel>();
 
-            
+
             foreach (var role in roles)
             {
 
@@ -155,10 +155,10 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AssignRoleToUser(string userId,List<AssignRoleToUserViewModel> requestList)
+        public async Task<IActionResult> AssignRoleToUser(string userId, List<AssignRoleToUserViewModel> requestList)
         {
 
-            var userToAssignRoles= (await _userManager.FindByIdAsync(userId))!;
+            var userToAssignRoles = (await _userManager.FindByIdAsync(userId))!;
 
             foreach (var role in requestList)
             {
@@ -173,7 +173,7 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.Areas.Admin.Controllers
             }
 
 
-            return RedirectToAction(nameof(HomeController.UserList),"Home");
+            return RedirectToAction(nameof(HomeController.UserList), "Home");
         }
     }
 }
