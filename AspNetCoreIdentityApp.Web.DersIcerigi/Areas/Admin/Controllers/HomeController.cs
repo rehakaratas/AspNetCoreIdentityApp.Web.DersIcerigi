@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AspNetCoreIdentityApp.Web.DersIcerigi.Areas.Admin.Controllers
 {
-    [Authorize(Roles ="admin")]
+    //[Authorize(Roles = "admin")]
     [Area("Admin")]
     public class HomeController : Controller
     {

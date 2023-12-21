@@ -3,6 +3,7 @@ using AspNetCoreIdentityApp.Web.DersIcerigi.Extensions;
 using AspNetCoreIdentityApp.Web.DersIcerigi.Models;
 using AspNetCoreIdentityApp.Web.DersIcerigi.OptionModels;
 using AspNetCoreIdentityApp.Web.DersIcerigi.Requirements;
+using AspNetCoreIdentityApp.Web.DersIcerigi.Seeds;
 using AspNetCoreIdentityApp.Web.DersIcerigi.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -76,6 +77,14 @@ builder.Services.ConfigureApplicationCookie(opt =>
 
 
 var app = builder.Build();
+
+
+using(var scope=app.Services.CreateScope())
+{
+    var roleMaanager = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
+
+    await PermissionSeed.Seed(roleMaanager);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
