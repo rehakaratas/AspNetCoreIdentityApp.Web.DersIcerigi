@@ -1,4 +1,4 @@
-﻿using AspNetCoreIdentityApp.Web.DersIcerigi.Models;
+﻿using AspNetCoreIdentityApp.Repository.DersIcerigi.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Text;

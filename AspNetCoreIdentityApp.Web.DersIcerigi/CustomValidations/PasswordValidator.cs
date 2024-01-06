@@ -1,4 +1,4 @@
-﻿using AspNetCoreIdentityApp.Web.DersIcerigi.Models;
+﻿using AspNetCoreIdentityApp.Repository.DersIcerigi.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace AspNetCoreIdentityApp.Web.DersIcerigi.CustomValidations
