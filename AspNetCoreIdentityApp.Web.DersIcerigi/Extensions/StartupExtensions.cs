@@ -1,6 +1,6 @@
 ﻿using AspNetCoreIdentityApp.Web.DersIcerigi.CustomValidations;
 using AspNetCoreIdentityApp.Web.DersIcerigi.Localizations;
-using AspNetCoreIdentityApp.Web.DersIcerigi.Models;
+using AspNetCoreIdentityApp.Repository.DersIcerigi.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace AspNetCoreIdentityApp.Web.DersIcerigi.Extensions

@@ -1,11 +1,12 @@
-﻿using AspNetCoreIdentityApp.Web.DersIcerigi.Models;
-using AspNetCoreIdentityApp.Web.DersIcerigi.ViewModels;
+﻿using AspNetCoreIdentityApp.Repository.DersIcerigi.Models;
+using AspNetCoreIdentityApp.Core.DersIcerigi.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using AspNetCoreIdentityApp.Web.DersIcerigi.Extensions;
-using AspNetCoreIdentityApp.Web.DersIcerigi.Services;
+using AspNetCoreIdentityApp.Service.DersIcerigi.Services;
 using System.Security.Claims;
+
 
 namespace AspNetCoreIdentityApp.Web.DersIcerigi.Controllers
 {

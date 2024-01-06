@@ -1,0 +1,15 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace AspNetCoreIdentityApp.Web.DersIcerigi.Controllers
+{
+    public class OrderController : Controller
+    {
+
+        [Authorize(Policy = "Permission.Order.Read")]
+        public IActionResult Index()
+        {
+            return View();
+        }
+    }
+}

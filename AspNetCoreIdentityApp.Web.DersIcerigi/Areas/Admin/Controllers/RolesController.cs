@@ -1,6 +1,6 @@
 ﻿using AspNetCoreIdentityApp.Web.DersIcerigi.Areas.Admin.Models;
 using AspNetCoreIdentityApp.Web.DersIcerigi.Extensions;
-using AspNetCoreIdentityApp.Web.DersIcerigi.Models;
+using AspNetCoreIdentityApp.Repository.DersIcerigi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

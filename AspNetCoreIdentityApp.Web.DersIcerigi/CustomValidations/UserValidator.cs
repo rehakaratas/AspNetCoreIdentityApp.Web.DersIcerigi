@@ -1,4 +1,4 @@
-﻿using AspNetCoreIdentityApp.Web.DersIcerigi.Models;
+﻿using AspNetCoreIdentityApp.Repository.DersIcerigi.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace AspNetCoreIdentityApp.Web.DersIcerigi.CustomValidations
@@ -9,7 +9,7 @@ namespace AspNetCoreIdentityApp.Web.DersIcerigi.CustomValidations
         {
           
             var errors= new List<IdentityError>();
-            var isDigit = int.TryParse(user.UserName[0]!.ToString(), out _);
+            var isDigit = int.TryParse(user.UserName![0].ToString(), out _);
 
             if (isDigit)
             {

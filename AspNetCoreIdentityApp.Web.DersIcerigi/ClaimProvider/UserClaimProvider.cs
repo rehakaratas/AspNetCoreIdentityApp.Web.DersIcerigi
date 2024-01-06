@@ -1,4 +1,4 @@
-﻿using AspNetCoreIdentityApp.Web.DersIcerigi.Models;
+﻿using AspNetCoreIdentityApp.Repository.DersIcerigi.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using NuGet.Versioning;
